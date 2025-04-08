@@ -59,3 +59,8 @@ This is a regular paragraph.
 </table>
 
 This is another regular paragraph.
+## 表格语法
+| Syntax      | Description |
+| ----------- | ----------- |
+| Header      | Title       |
+| Paragraph   | Text        |
