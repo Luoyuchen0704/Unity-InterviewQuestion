@@ -24,7 +24,7 @@
 * git shortlog 生成简洁的提交日志摘要
 * git describe 生成一个可读字符串，基于Git的标签系统来描述
 ### 远程操作
-* git remote - 远程仓库操作
+* git remote add origin [github仓库地址]- 关联远程仓库
 * git fetch - 从远程仓库获取最新版本
 * git pull - 从远程仓库获取最新版本并合并到本地
 * git push - 将本地仓库的修改推送到远程仓库
@@ -44,3 +44,8 @@
 8. 创建Pull Request(PR),邀请团队成员进行代码审查，PR合并到主分支
 9. 合并更改，远程仓库主分支合并到本地分支, git checkout main, git pull origin main, git merge new-feature
 1. 删除分支,git branch -d new-feature, 远程仓库删除分支git push origin --delete new-feature
+## 存在问题
+* 本地分支名称不匹配，GitHub2020年后将默认分支改为main,Git本地仍为master
+* $ git branch -v,确认本地分支状态
+* git branch -m master main，重命名本地分支为main
+* git push -f origin main,强制推送本地内容覆盖远程

@@ -53,4 +53,216 @@ int i = (int)o;
 1. 接口中成员变量默认修饰符为public static final静态不能被修改，必须赋初值。抽象类可以有自己的数据成员变量，也可以有非抽象的成员变量，成员变量默认为default。抽象类中方法前面有abstract修饰，不能用private、static、synchronize、native修饰，方法必须以分号结尾，不带花括号。
 2. 抽象类是对类的抽象，接口是对行为的抽象，行为跨越不同类的对象，可使用接口，对于一些现实的类对象，用继承抽象类。抽象类从子类中发现了公共的东西，泛化出父类，然后子类继承父类，而接口是根本不知道子类的存在，方法如何实现还不确定，只是预先定义。
 ## 5.委托和事件是什么?有什么作用？
+### 委托Delegate
+1. 一种类型，存储对一个或多个方法的引用。
+2. 允许将方法作为参数传递给其他方法，实现回调函数的功能。
+3. 可用于异步编程，在后台执行某些操作后通知主线程，实现多线程和并发编程。
+4. 实现事件的订阅和通知机制
+### 事件Event
+1. 是一种特殊类型的委托，用在对象发生特定动作或状态变化时通知其他对象。（动画，碰撞）
+2. 松耦合，允许对象之间进行交互而无需显式的引用彼此。
+3. 事件可以被其他对象订阅或取消订阅，以便执行相应处理逻辑。
+4. 事件可以实现观察者模式、发布/订阅模式等，使对象之间能够可扩展和可重用的方式进行通信。
+* 委托和事件是C#中实现回调和事件驱动编程的重要机制。通过使用委托和事件，可以实现对象之间的松耦合和可扩展性，使代码更具灵活性和可维护性。委托和事件在GUI应用程序、多线程编程、异步编程等方面都有广泛的应用。
+## 6.C#中的异常处理机制是什么？如何捕获和处理异常？
+1. 异常Exception，程序执行过程中出现的错误或意外情况，可以由系统引发（空引用异常）或由开发人员明确引发（自定义异常）。
+2. try-catch语句块，捕获和处理异常，try块包含可能引发异常的代码，catch块捕获并处理特定类型的异常。
+3. throw语句，用于手动引发异常，允许开发人员在特定条件下主动抛出异常，通知程序发生了错误或非预期情况。
+4. finally块，可选的出现在try-catch语句块中，无论异常是否发生都需要执行。
+### 异常处理的一般流程
+1. 程序执行可能引发异常的代码段，将其包装在try块中。
+2. 如果try块中发生了异常，系统中断try块中的代码执行，并跳转到catch块。
+3. catch块中的代码根据异常类型进行处理，如记录日志。向用户显示错误信息等。
+4. 如果没有合适的catch块来处理异常，异常会继续向上一层调用栈传播，直到找到适当的异常处理机制。
+```
+try
+{
+   // 可能引发异常的代码
+   int a = 10;
+   int b = 0;
+   int result = a / b;
+   Console.WriteLine(result);
+}
+catch (DivideByZeroException ex)
+{
+   // 捕获并处理异常
+   Console.WriteLine("除以零错误： {0}", ex.Message);
+}
+// 通用异常类
+catch (Exception ex)
+{
+   // 捕获并处理其他类型的异常
+   Console.WriteLine("发生异常：{0}", ex.Message);
+}
+finally
+{
+   // 无论是否发生异常，都会执行的代码
+   Console.WriteLine("程序结束");
+}
+```
+## 9.C#中的LINQ是什么？它有什么作用？
+1. LINQ是C#语言的一项功能，它提供了一种统一的查询语法和编程模型，用于从各种数据源（如集合、数据库、XML等）中进行数据查询和操作。
+2. 数据查询，类SQL的查询语句来查询和筛选数据，无需手动编写循环和条件语句，简化数据查询过程。
+3. 数据操作，排序、过滤、投影、分组、连接等数据操作。
+4. 类型安全，在C#编译器级别继承，通过静态类型检查和编译时错误检测，帮助开发人员在查询和操作数据时避免类型不匹配和错误，提高代码可靠性和可维护性。
+5. 可扩展性，自定义扩展方法和查询提供器来支持特定数据源的查询和操作。
+```
+// 使用LINQ查询一个整数集合中的偶数
+List<int> numbers = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 
+var evenNumbers = from num in numbers
+                  where num % 2 == 0
+                  select num;
+
+foreach (var num in evenNumbers)
+{
+    Console.WriteLine(num);
+}
+```
+## 10.C#中的多线程编程是什么？如何实现多线程
+* 多线程编程是指在一个应用程序中同时执行多个线程，每个线程独立执行一段代码，可以并行的进行任务处理。
+1. 使用Thread类创建和管理线程，通过实例化Thread类传入要执行的方法作为参数，创建一个新的线程，调用Start方法来启动线程。
+```
+using System;
+using System.Threading;
+
+class Program
+{
+    static void Main()
+    {
+        Thread thread = new Thread(DoWork);
+        thread.Start();
+
+        // 主线程代码
+        for (int i = 0; i < 10; i++)
+        {
+            Console.WriteLine("Main Thread: {0}", i);
+            Thread.Sleep(1000);
+        }
+    }
+
+    static void DoWork()
+    {
+      // 新线程代码
+        for (int i = 0; i < 10; i++)
+        {
+            Console.WriteLine("Worker Thread: {0}", i);
+            Thread.Sleep(1000);
+        }
+    }
+}
+```
+* 创建了一个新的线程，并在该线程中执行DoWork方法，主线程继续执行Main方法中的代码，通过调用Thread.Sleep方法，模拟线程之间的时间间隔
+1. 使用ThreadPool类，线程池，重用已有线程来执行多个任务，调用ThreadPool.QueueUserWorkItem方法，将方法放入线程池中执行。
+```
+	using System;
+	using System.Threading;
+	
+	class Program
+	{
+	    static void Main()
+	    {
+	        ThreadPool.QueueUserWorkItem(DoWork);
+	
+	        // 主线程的代码
+	        for (int i = 0; i < 10; i++)
+	        {
+	            Console.WriteLine("Main Thread: {0}", i);
+	            Thread.Sleep(1000);
+	        }
+	    }
+	
+	    static void DoWork(object state)
+	    {
+	        // 线程池线程的代码
+	        for (int i = 0; i < 10; i++)
+	        {
+	            Console.WriteLine("Worker Thread: {0}", i);
+	            Thread.Sleep(1000);
+	        }
+	    }
+	}
+
+```
+* 将DoWork方法放入线程池中执行。线程池会自动分配线程来处理任务，并可以在任务完成后重新使用线程，提高了性能和资源利用率。
+## 11.C#中泛型是什么？有什么优势？
+* 通用编程概念，允许编写不同类型上的工作的可重用代码，定义类、结构、接口和方法，参数化类型，使用指定具体的类型。
+* 类型安全性，在编译时进行类型检查，捕获类型错误，避免。运行时出现类型转换错误或运行时异常
+* 代码重用，编写可重用代码，提高可维护性和可扩展性。
+* 性能提升，编译时生成特定类型代码，避免了装箱和拆箱操作，提高代码的执行效率。
+* 集合类（List、Dictionary）的强类型化，编译时指定集合中存储的元素类型，提供了类型安全的集合操作
+```
+class GenericClass<T>
+{
+   private T value;
+
+   public GenericClass(T value)
+   {
+      this.value = value;
+   }
+
+   public T GetValue()
+   {
+      return value;
+   }
+}
+
+class Program
+{
+   static void Main()
+   {
+      GenericClass<int> intClass = new GenericClass<int>(10);
+      int intValue = intClass.GetValue();
+      Console.WriteLine(intValue);
+
+      GenericClass<string> stringClass = new GenericClass<string>("Hello");
+      string stringValue = stringClass.GetValue();
+      Console.WriteLine(stringValue);
+   }
+}
+```
+* 指定类型参数T，在实例化时传入不同类型的值，在编译时指定具体类型，并在运行时获得类型安全和高效的代码返回。
+## 12.C#类
+* 类是一个数据类型的蓝图，没有定义任何数据，定义了类的名称
+* 对象是类的实例，构成类的方法和变量，称为类的成员
+* 类的默认访问标识符是internal，成员的默认访问标识符是private
+* .运算符访问类的成员
+* 成员变量和成员函数，实现封装
+* 构造函数，没有返回类型，可以有参数，在创建对象时赋初值
+* 析构函数，用于在结束程序（关闭文件、释放内存）之前释放资源
+* static静态成员，无论多少个类被创建，只有一个静态成员的副本，用于定义常量，可以直接调用类而不需要创建类的实例来获取，静态变量可在成员函数或类的定义外部进行初始化
+* 把成员函数声明为static，只能访问静态变量，在对象被创建之前就已经存在
+## 13.C#继承
+* 继承是面向对象编程的一个基本概念，继承允许我们定义一个类并从另一个类那里继承属性和方法，有利于重用代码和节省开发时间
+* 基类，派生类，属于（IS-A），派生类属于基类
+* 只能继承自一个类，但一个类可以继承多个接口
+* :继承符号，用于继承类，继承基类的成员（字段、方法、属性），不会继承私有
+* 派生类通过base关键字调用基类的构造函数和方法
+* Unity组件继承自MonoBehaviour类
+* 父类对象在子类对象之前被创建，可以进行父类初始化
+* 一个接口可以继承自一个或多个其他接口，继承基接口的所有成员
+* 派生接口可以扩展基接口的成员列表，但不能改变访问修饰符
+```
+interface IBaseInterface
+{
+    void Method1();
+}
+
+interface IDerivedInterface : IBaseInterface
+{
+    void Method2();
+}
+```
+## 14.C#多态
+* 多态是同一个行为具有多个不同表现形式或形态的能力
+* 多态性是允许你将父对象设置成为和一个或更多的他的子对象相等的技术，赋值之后，父对象就可以根据当前赋值给它的子对象的特性以不同的方式运作
+* 一个接口，多个功能
+* 多态性就是同一个接口，使用不同的实例而执行不同操作
+* 同一个事件发生在不同的对象上会产生不同的结果
+* 静态绑定，早期绑定，编译时，函数和对象的连接机制
+* 函数重载，在同一个范围内对相同的函数名有多个定义，可以是参数列表中参数类型不同，也可以是参数个数不同
+* 运算符重载
+* 动态多态性，允许使用abstract创建抽象类，包含抽象方法，抽象方法可被派生类实现
+* 不能创建抽象类的实例，不能在抽象类外部声明抽象方法
+* 类定义前放关键字sealed，将类声明为密封类，不能被继承，抽象类不能被声明为sealed
+* 有一个定义在类中的函数需要在继承类中实现，使用虚方法virtual声明，使用override关键字重写，在不同继承类中有不同的实现
